@@ -1,0 +1,12 @@
+published_post:
+  title: Published Post
+  body: This is a published post body.
+  status: 1
+  published_at: <%= 1.day.ago.to_fs(:db) %>
+  comments_count: 0
+
+draft_post:
+  title: Draft Post
+  body: This is a draft post body.
+  status: 0
+  comments_count: 0

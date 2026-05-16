@@ -1,0 +1,24 @@
+<% if @comment.root? %>
+  <%= turbo_stream.append "comments" do %>
+    <%= render "comments/comment", comment: @comment %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append dom_id(@comment.parent, :replies) do %>
+    <%= render "comments/comment", comment: @comment %>
+  <% end %>
+  <%= turbo_stream.update dom_id(@comment.parent, :reply_form) do %>
+    <div id="<%= dom_id(@comment.parent, :reply_form) %>" class="comment__reply-form is-hidden" hidden data-reply-target="form">
+      <%= render "comments/form", post: @post, comment: Comment.new, parent: @comment.parent %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.update dom_id(@post, :new_comment) do %>
+  <%= turbo_frame_tag dom_id(@post, :new_comment) do %>
+    <%= render "comments/form", post: @post, comment: Comment.new, parent: nil %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.update "comment_count" do %>
+  Comments (<%= @post.reload.comments_count %>)
+<% end %>

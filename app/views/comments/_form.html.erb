@@ -1,0 +1,24 @@
+<%= form_with model: [ post, comment ],
+      url: post_comments_path(post),
+      class: "comment-form #{'comment-form--reply' if parent}",
+      data: { turbo_frame: parent ? dom_id(parent, :reply_form) : dom_id(post, :new_comment) } do |form| %>
+  <%= form.hidden_field :parent_id, value: parent&.id %>
+
+  <div id="comment_form_errors">
+    <%= render "comments/errors", comment: comment if comment.errors.any? %>
+  </div>
+
+  <div class="comment-form__fields">
+    <%= form.text_area :body,
+          rows: parent ? 3 : 4,
+          placeholder: parent ? "Write a reply..." : "Join the discussion...",
+          required: true,
+          data: { controller: "autosize", action: "input->autosize#resize" } %>
+    <div class="comment-form__actions">
+      <% if parent %>
+        <button type="button" class="btn btn--ghost" data-action="reply#cancel">Cancel</button>
+      <% end %>
+      <%= form.submit parent ? "Reply" : "Comment", class: "btn btn--primary" %>
+    </div>
+  </div>
+<% end %>

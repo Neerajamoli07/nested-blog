@@ -1,0 +1,13 @@
+<article class="post-card" id="<%= dom_id(post) %>">
+  <header class="post-card__header">
+    <h2><%= link_to post.title, post, data: { turbo_frame: "_top" } %></h2>
+    <%= post_status_badge(post) %>
+  </header>
+  <p class="post-card__excerpt"><%= truncate(post.body, length: 180) %></p>
+  <footer class="post-card__meta">
+    <time datetime="<%= (post.published_at || post.created_at).iso8601 %>">
+      <%= format_post_date(post) %>
+    </time>
+    <span><%= pluralize(post.comments_count, "comment") %></span>
+  </footer>
+</article>

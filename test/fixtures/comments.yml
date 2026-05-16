@@ -1,0 +1,8 @@
+root_comment:
+  body: A root comment on the published post.
+  post: published_post
+
+reply_comment:
+  body: A nested reply to the root comment.
+  post: published_post
+  parent: root_comment

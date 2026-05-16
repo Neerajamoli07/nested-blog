@@ -1,0 +1,8 @@
+<% flash.each do |type, message| %>
+  <div class="flash flash--<%= type == "notice" ? "success" : "alert" %>"
+       data-controller="flash"
+       data-flash-dismiss-after-value="5000">
+    <%= message %>
+    <button type="button" class="flash__close" data-action="flash#dismiss" aria-label="Dismiss">&times;</button>
+  </div>
+<% end %>

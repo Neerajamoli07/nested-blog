@@ -1,0 +1,41 @@
+<% content_for :title, @post.title %>
+
+<article class="post-detail">
+  <header class="post-detail__header">
+    <div class="post-detail__actions">
+      <%= link_to "← Back", posts_path, class: "btn btn--ghost" %>
+      <div class="post-detail__buttons">
+        <% unless @post.published? %>
+          <%= button_to "Publish", publish_post_path(@post), method: :patch, class: "btn btn--primary" %>
+        <% end %>
+        <%= link_to "Edit", edit_post_path(@post), class: "btn btn--secondary" %>
+        <%= button_to "Delete", @post, method: :delete, class: "btn btn--danger", data: { turbo_confirm: "Delete this post and all comments?" } %>
+      </div>
+    </div>
+    <h1><%= @post.title %></h1>
+    <div class="post-detail__meta">
+      <%= post_status_badge(@post) %>
+      <time datetime="<%= (@post.published_at || @post.created_at).iso8601 %>">
+        <%= format_post_date(@post) %>
+      </time>
+    </div>
+  </header>
+
+  <div class="post-detail__body">
+    <%= simple_format @post.body %>
+  </div>
+</article>
+
+<section class="comments-section" id="<%= dom_id(@post, :comments) %>">
+  <h2 id="comment_count">Comments (<%= @post.comments_count %>)</h2>
+
+  <%= turbo_frame_tag dom_id(@post, :new_comment) do %>
+    <%= render "comments/form", post: @post, comment: @comment, parent: nil %>
+  <% end %>
+
+  <div id="comments" class="comments-list">
+    <% @root_comments.each do |comment| %>
+      <%= render "comments/comment", comment: comment %>
+    <% end %>
+  </div>
+</section>
