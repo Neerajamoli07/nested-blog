@@ -171,9 +171,41 @@ bin/kamal setup   # first-time server setup
 bin/kamal deploy  # deploy new version
 ```
 
-## CI
+## CI (GitHub Actions)
 
-GitHub Actions workflow in `.github/workflows/ci.yml` runs security scans and tests.
+Continuous integration runs on every **push** and **pull request** to `main`.
+
+| Job | What it runs |
+|-----|----------------|
+| **Security (Ruby)** | Brakeman + `bundler-audit` |
+| **Security (importmap)** | `bin/importmap audit` |
+| **RuboCop** | Style lint |
+| **Tests** | `bin/rails test` against PostgreSQL 16 |
+
+### Enable on GitHub
+
+1. Create a repository on GitHub and push this project:
+
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin git@github.com:YOUR_USER/blog_app.git
+   git push -u origin main
+   ```
+
+2. Open the repo on GitHub → **Actions**. Workflows run automatically; no secrets are required for the default CI jobs.
+
+3. Optional: require CI before merge under **Settings → Branches → Branch protection rules** → enable **Require status checks** and select the CI jobs.
+
+### Run the same checks locally
+
+```bash
+bin/ci          # full pipeline (needs local Postgres for tests)
+bin/rails test  # tests only
+bin/rubocop     # lint only
+```
+
+On CI, the test database is configured via `DATABASE_URL` (see `.github/workflows/ci.yml`). Locally, `config/database.yml` uses the `dev` user unless you set `DATABASE_URL` yourself.
 
 ## License
 
