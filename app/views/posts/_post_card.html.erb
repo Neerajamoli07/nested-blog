@@ -1,13 +1,26 @@
 <article class="post-card" id="<%= dom_id(post) %>">
+  <% if post.cover_image.attached? %>
+    <%= link_to post, class: "post-card__image" do %>
+      <%= image_tag post.cover_image.variant(resize_to_limit: [ 400, 200 ]), alt: post.title %>
+    <% end %>
+  <% end %>
+
   <header class="post-card__header">
     <h2><%= link_to post.title, post, data: { turbo_frame: "_top" } %></h2>
-    <%= post_status_badge(post) %>
+    <%= post_status_badge(post) unless post.published? %>
   </header>
+
   <p class="post-card__excerpt"><%= truncate(post.body, length: 180) %></p>
+
   <footer class="post-card__meta">
+    <div class="post-card__author">
+      <%= user_avatar(post.user, size: 28) %>
+      <span><%= post.user.name %></span>
+    </div>
     <time datetime="<%= (post.published_at || post.created_at).iso8601 %>">
       <%= format_post_date(post) %>
     </time>
     <span><%= pluralize(post.comments_count, "comment") %></span>
+    <span>♥ <%= post.likes_count %></span>
   </footer>
 </article>

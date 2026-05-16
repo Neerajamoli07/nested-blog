@@ -1,8 +1,10 @@
 root_comment:
   body: A root comment on the published post.
   post: published_post
+  user: member
 
 reply_comment:
   body: A nested reply to the root comment.
   post: published_post
   parent: root_comment
+  user: admin

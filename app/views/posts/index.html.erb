@@ -2,7 +2,9 @@
 
 <div class="page-header">
   <h1>All Posts</h1>
-  <%= link_to "Write a post", new_post_path, class: "btn btn--primary" %>
+  <% if logged_in? %>
+    <%= link_to "Write a post", new_post_path, class: "btn btn--primary" %>
+  <% end %>
 </div>
 
 <%= turbo_frame_tag "posts" do %>
@@ -14,7 +16,13 @@
     </div>
   <% else %>
     <div class="empty-state">
-      <p>No posts yet. <%= link_to "Create your first post", new_post_path %>.</p>
+      <% if @query.present? %>
+        <p>No posts found for "<%= @query %>".</p>
+      <% elsif logged_in? %>
+        <p>No posts yet. <%= link_to "Create your first post", new_post_path %>.</p>
+      <% else %>
+        <p>No published posts yet. <%= link_to "Sign up", signup_path %> to get started.</p>
+      <% end %>
     </div>
   <% end %>
 <% end %>

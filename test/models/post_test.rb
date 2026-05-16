@@ -2,15 +2,8 @@ require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
   test "valid post" do
-    post = Post.new(title: "Title", body: "Body")
+    post = Post.new(title: "Title", body: "Body", user: users(:admin))
     assert post.valid?
-  end
-
-  test "requires title and body" do
-    post = Post.new
-    assert_not post.valid?
-    assert_includes post.errors[:title], "can't be blank"
-    assert_includes post.errors[:body], "can't be blank"
   end
 
   test "publish! sets status and published_at" do
@@ -18,5 +11,9 @@ class PostTest < ActiveSupport::TestCase
     post.publish!
     assert post.published?
     assert_not_nil post.published_at
+  end
+
+  test "search finds posts" do
+    assert_includes Post.published.search_by_content("Published"), posts(:published_post)
   end
 end

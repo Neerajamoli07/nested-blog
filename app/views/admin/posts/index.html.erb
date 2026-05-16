@@ -1,0 +1,30 @@
+<% content_for :title, "Posts" %>
+
+<h1>All posts</h1>
+
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Status</th>
+      <th>Comments</th>
+      <th>Likes</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td><%= link_to post.title, post %></td>
+        <td><%= post.user.name %></td>
+        <td><%= post.status %></td>
+        <td><%= post.comments_count %></td>
+        <td><%= post.likes_count %></td>
+        <td>
+          <%= button_to "Delete", admin_post_path(post), method: :delete, class: "btn btn--danger btn--sm", data: { turbo_confirm: "Delete post?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

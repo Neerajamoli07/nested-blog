@@ -1,0 +1,20 @@
+<% content_for :title, "Notifications" %>
+
+<div class="page-header">
+  <h1>Notifications</h1>
+  <% if unread_notifications_count.positive? %>
+    <%= button_to "Mark all read", mark_all_read_notifications_path, method: :patch, class: "btn btn--secondary" %>
+  <% end %>
+</div>
+
+<div id="notifications_list" class="notifications-list">
+  <% if @notifications.any? %>
+    <% @notifications.each do |notification| %>
+      <%= render "notifications/notification", notification: notification %>
+    <% end %>
+  <% else %>
+    <div class="empty-state">
+      <p>No notifications yet.</p>
+    </div>
+  <% end %>
+</div>

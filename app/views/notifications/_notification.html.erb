@@ -1,0 +1,13 @@
+<%= tag.div id: dom_id(notification), class: "notification #{'notification--unread' unless notification.read?}" do %>
+  <div class="notification__content">
+    <p><%= notification.message %></p>
+    <time datetime="<%= notification.created_at.iso8601 %>">
+      <%= time_ago_in_words(notification.created_at) %> ago
+    </time>
+  </div>
+  <% if notification.notifiable.is_a?(Comment) %>
+    <%= link_to "View", post_path(notification.notifiable.post), class: "notification__link" %>
+  <% elsif notification.notifiable.is_a?(Post) %>
+    <%= link_to "View", post_path(notification.notifiable), class: "notification__link" %>
+  <% end %>
+<% end %>

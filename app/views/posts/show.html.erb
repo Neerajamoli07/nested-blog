@@ -1,24 +1,42 @@
 <% content_for :title, @post.title %>
 
+<%= turbo_stream_from @post %>
+
 <article class="post-detail">
+  <% if @post.cover_image.attached? %>
+    <div class="post-detail__cover">
+      <%= image_tag @post.cover_image.variant(resize_to_limit: [ 960, 480 ]), alt: @post.title %>
+    </div>
+  <% end %>
+
   <header class="post-detail__header">
     <div class="post-detail__actions">
       <%= link_to "← Back", posts_path, class: "btn btn--ghost" %>
-      <div class="post-detail__buttons">
-        <% unless @post.published? %>
-          <%= button_to "Publish", publish_post_path(@post), method: :patch, class: "btn btn--primary" %>
-        <% end %>
-        <%= link_to "Edit", edit_post_path(@post), class: "btn btn--secondary" %>
-        <%= button_to "Delete", @post, method: :delete, class: "btn btn--danger", data: { turbo_confirm: "Delete this post and all comments?" } %>
-      </div>
+      <% if logged_in? && (current_user == @post.user || current_user.admin?) %>
+        <div class="post-detail__buttons">
+          <% unless @post.published? %>
+            <%= button_to "Publish", publish_post_path(@post), method: :patch, class: "btn btn--primary" %>
+          <% end %>
+          <%= link_to "Edit", edit_post_path(@post), class: "btn btn--secondary" %>
+          <%= button_to "Delete", @post, method: :delete, class: "btn btn--danger", data: { turbo_confirm: "Delete this post and all comments?" } %>
+        </div>
+      <% end %>
     </div>
+
     <h1><%= @post.title %></h1>
     <div class="post-detail__meta">
+      <div class="post-detail__author">
+        <%= user_avatar(@post.user) %>
+        <span><%= @post.user.name %></span>
+      </div>
       <%= post_status_badge(@post) %>
       <time datetime="<%= (@post.published_at || @post.created_at).iso8601 %>">
         <%= format_post_date(@post) %>
       </time>
+      <span class="live-badge" title="Comments update in real time">● Live</span>
     </div>
+
+    <%= render "likes/button", likeable: @post %>
   </header>
 
   <div class="post-detail__body">
@@ -29,8 +47,12 @@
 <section class="comments-section" id="<%= dom_id(@post, :comments) %>">
   <h2 id="comment_count">Comments (<%= @post.comments_count %>)</h2>
 
-  <%= turbo_frame_tag dom_id(@post, :new_comment) do %>
-    <%= render "comments/form", post: @post, comment: @comment, parent: nil %>
+  <% if logged_in? %>
+    <%= turbo_frame_tag dom_id(@post, :new_comment) do %>
+      <%= render "comments/form", post: @post, comment: @comment, parent: nil %>
+    <% end %>
+  <% else %>
+    <p class="comments-login-prompt"><%= link_to "Sign in", login_path %> to join the discussion.</p>
   <% end %>
 
   <div id="comments" class="comments-list">

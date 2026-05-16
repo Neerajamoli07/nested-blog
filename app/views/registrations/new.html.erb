@@ -1,0 +1,50 @@
+<% content_for :title, "Sign up" %>
+
+<div class="auth-card">
+  <h1>Create account</h1>
+
+  <%= form_with model: @user, url: signup_path, class: "form", html: { multipart: true } do |form| %>
+    <% if @user.errors.any? %>
+      <div class="form-errors">
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-field">
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :email %>
+      <%= form.email_field :email, required: true, autocomplete: "email" %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :avatar, "Profile photo (optional)" %>
+      <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/webp" %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :password %>
+      <%= form.password_field :password, required: true, minlength: 8, autocomplete: "new-password" %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Create account", class: "btn btn--primary" %>
+    </div>
+  <% end %>
+
+  <p class="auth-card__footer">
+    Already have an account? <%= link_to "Sign in", login_path %>
+  </p>
+</div>

@@ -1,0 +1,19 @@
+<div id="<%= dom_id(likeable, :likes) %>" class="likes">
+  <% if logged_in? %>
+    <% if likeable.liked_by?(current_user) %>
+      <%= button_to "♥ #{likeable.likes_count}",
+            unlike_path_for(likeable),
+            method: :delete,
+            class: "likes__btn likes__btn--active",
+            form: { data: { turbo_stream: true } } %>
+    <% else %>
+      <%= button_to "♡ #{likeable.likes_count}",
+            like_path_for(likeable),
+            method: :post,
+            class: "likes__btn",
+            form: { data: { turbo_stream: true } } %>
+    <% end %>
+  <% else %>
+    <span class="likes__count">♥ <%= likeable.likes_count %></span>
+  <% end %>
+</div>

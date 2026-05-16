@@ -1,26 +1,30 @@
 <%= tag.div id: dom_id(comment), class: "comment", style: "--depth: #{comment.depth}", data: { controller: "reply" } do %>
+  <div class="comment__header">
+    <%= user_avatar(comment.user, size: 32) %>
+    <strong class="comment__author"><%= comment.user.name %></strong>
+  </div>
+
   <div class="comment__content">
     <p class="comment__body"><%= simple_format comment.body %></p>
     <footer class="comment__meta">
       <time datetime="<%= comment.created_at.iso8601 %>">
         <%= comment.created_at.strftime("%b %d, %Y at %l:%M %p") %>
       </time>
-      <% if can_reply?(comment) %>
-        <button type="button"
-                class="comment__reply-btn"
-                data-action="reply#toggle">
-          Reply
-        </button>
+      <%= render "likes/button", likeable: comment %>
+      <% if logged_in? && can_reply?(comment) %>
+        <button type="button" class="comment__reply-btn" data-action="reply#toggle">Reply</button>
       <% end %>
-      <%= button_to "Delete",
-            post_comment_path(comment.post, comment),
-            method: :delete,
-            class: "comment__delete-btn",
-            form: { data: { turbo_confirm: "Delete this comment and all replies?" } } %>
+      <% if logged_in? && (current_user == comment.user || current_user.admin?) %>
+        <%= button_to "Delete",
+              post_comment_path(comment.post, comment),
+              method: :delete,
+              class: "comment__delete-btn",
+              form: { data: { turbo_confirm: "Delete this comment and all replies?" } } %>
+      <% end %>
     </footer>
   </div>
 
-  <% if can_reply?(comment) %>
+  <% if logged_in? && can_reply?(comment) %>
     <div id="<%= dom_id(comment, :reply_form) %>" class="comment__reply-form is-hidden" hidden data-reply-target="form">
       <%= render "comments/form", post: comment.post, comment: Comment.new, parent: comment %>
     </div>

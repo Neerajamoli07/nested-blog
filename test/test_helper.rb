@@ -4,12 +4,18 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel locally; use a single worker on CI (one test database).
     parallelize(workers: ENV["CI"] ? 1 : :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
-
-    # Add more helper methods to be used by all tests here...
   end
+end
+
+module SignInHelper
+  def sign_in_as(user)
+    post login_path, params: { email: user.email, password: "password123" }
+  end
+end
+
+class ActionDispatch::IntegrationTest
+  include SignInHelper
 end

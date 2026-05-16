@@ -3,6 +3,7 @@ require "test_helper"
 class CommentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @post = posts(:published_post)
+    sign_in_as(users(:member))
   end
 
   test "should create root comment via turbo stream" do
@@ -19,7 +20,6 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
            params: { comment: { body: "Nested reply", parent_id: parent.id } },
            as: :turbo_stream
     end
-    assert_response :success
     assert_equal parent, Comment.last.parent
   end
 

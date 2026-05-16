@@ -4,9 +4,13 @@ published_post:
   status: 1
   published_at: <%= 1.day.ago.to_fs(:db) %>
   comments_count: 0
+  likes_count: 0
+  user: admin
 
 draft_post:
   title: Draft Post
   body: This is a draft post body.
   status: 0
   comments_count: 0
+  likes_count: 0
+  user: member

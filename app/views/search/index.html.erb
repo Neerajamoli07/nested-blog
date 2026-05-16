@@ -1,0 +1,24 @@
+<% content_for :title, "Search" %>
+
+<div class="page-header">
+  <h1>Search results</h1>
+</div>
+
+<%= form_with url: search_path, method: :get, class: "search-form search-form--page", data: { turbo_frame: "_top" } do %>
+  <%= text_field_tag :q, @query, placeholder: "Search posts...", class: "search-form__input", autofocus: true %>
+  <%= submit_tag "Search", class: "btn btn--primary" %>
+<% end %>
+
+<% if @query.present? %>
+  <% if @posts.any? %>
+    <div class="post-list">
+      <% @posts.each do |post| %>
+        <%= render "posts/post_card", post: post %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>No posts found for "<%= @query %>".</p>
+    </div>
+  <% end %>
+<% end %>

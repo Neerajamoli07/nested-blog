@@ -1,0 +1,30 @@
+<% content_for :title, "Dashboard" %>
+
+<h1>Admin Dashboard</h1>
+
+<div class="admin-stats">
+  <% @stats.each do |label, value| %>
+    <div class="admin-stat">
+      <span class="admin-stat__value"><%= value %></span>
+      <span class="admin-stat__label"><%= label.to_s.humanize %></span>
+    </div>
+  <% end %>
+</div>
+
+<section class="admin-section">
+  <h2>Recent users</h2>
+  <ul class="admin-list">
+    <% @recent_users.each do |user| %>
+      <li><%= user.name %> · <%= user.email %> · <%= user.role %></li>
+    <% end %>
+  </ul>
+</section>
+
+<section class="admin-section">
+  <h2>Recent posts</h2>
+  <ul class="admin-list">
+    <% @recent_posts.each do |post| %>
+      <li><%= link_to post.title, post %> · <%= post.user.name %> · <%= post.status %></li>
+    <% end %>
+  </ul>
+</section>

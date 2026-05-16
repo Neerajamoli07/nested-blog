@@ -1,4 +1,3 @@
-<%= turbo_stream.remove @comment %>
 <%= turbo_stream.update "comment_count" do %>
   Comments (<%= @post.reload.comments_count %>)
 <% end %>

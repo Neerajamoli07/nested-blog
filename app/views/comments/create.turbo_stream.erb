@@ -1,11 +1,4 @@
-<% if @comment.root? %>
-  <%= turbo_stream.append "comments" do %>
-    <%= render "comments/comment", comment: @comment %>
-  <% end %>
-<% else %>
-  <%= turbo_stream.append dom_id(@comment.parent, :replies) do %>
-    <%= render "comments/comment", comment: @comment %>
-  <% end %>
+<% if @comment.parent.present? %>
   <%= turbo_stream.update dom_id(@comment.parent, :reply_form) do %>
     <div id="<%= dom_id(@comment.parent, :reply_form) %>" class="comment__reply-form is-hidden" hidden data-reply-target="form">
       <%= render "comments/form", post: @post, comment: Comment.new, parent: @comment.parent %>
