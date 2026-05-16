@@ -37,10 +37,26 @@ Visit [http://localhost:3000](http://localhost:3000).
 
 ### Background jobs
 
-Comment and like notifications run via **Solid Queue**:
+Comment and like notifications run via **Solid Queue**. You need a job worker running in development:
 
 ```bash
+# Terminal 1 — web server
+bin/rails server
+
+# Terminal 2 — job worker
 bin/jobs
+```
+
+Or run both together:
+
+```bash
+bin/dev
+```
+
+If `bin/jobs` fails with missing `solid_queue_*` tables, run:
+
+```bash
+bin/rails db:migrate
 ```
 
 ### Live comments demo
